@@ -39,6 +39,7 @@ Create booking request is sent with invalid body (ex: remove lastname field).
   "additionalneeds": "Breakfast"
 }
 
+```
 **Expected behavior:**  
 The API should return 400 Bad Request because the client sent an invalid request body.
 
