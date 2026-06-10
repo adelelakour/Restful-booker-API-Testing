@@ -292,7 +292,6 @@
 									"//Save created booking ID",
 									"pm.collectionVariables.set(\"BookingID\", json_data.bookingid);",
 									"",
-									"console.log(pm.collectionVariables.get(\"BookingID\"));",
 									"",
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
@@ -305,7 +304,13 @@
 					],
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{myToken}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n    \"firstname\" : \"Jim\",\n    \"lastname\" : \"Brown\",\n    \"totalprice\" : 111,\n    \"depositpaid\" : true,\n    \"bookingdates\" : {\n        \"checkin\" : \"2018-01-01\",\n        \"checkout\" : \"2019-01-01\"\n    },\n    \"additionalneeds\" : \"Breakfast\"\n}",
@@ -845,6 +850,346 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Schema Validation",
+			"item": [
+				{
+					"name": "GetToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const json_data = pm.response.json();",
+									"",
+									"pm.test(\"save_token\", function(){",
+									"    pm.collectionVariables.set(\"myToken\", json_data.token);",
+									"});",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\" : \"admin\",\n    \"password\" : \"password123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://restful-booker.herokuapp.com/auth",
+							"protocol": "https",
+							"host": [
+								"restful-booker",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateBooking Schema",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const createBookingSchema = {",
+									"    type: \"object\",",
+									"    required: [\"bookingid\", \"booking\"],",
+									"    properties: {",
+									"        bookingid: {",
+									"            type: \"number\"",
+									"        },",
+									"        booking: {",
+									"            type: \"object\",",
+									"            required: [",
+									"                \"firstname\",",
+									"                \"lastname\",",
+									"                \"totalprice\",",
+									"                \"depositpaid\",",
+									"                \"bookingdates\",",
+									"                \"additionalneeds\"",
+									"            ],",
+									"            properties: {",
+									"                firstname: {",
+									"                    type: \"string\"",
+									"                },",
+									"                lastname: {",
+									"                    type: \"string\"",
+									"                },",
+									"                totalprice: {",
+									"                    type: \"number\"",
+									"                },",
+									"                depositpaid: {",
+									"                    type: \"boolean\"",
+									"                },",
+									"                bookingdates: {",
+									"                    type: \"object\",",
+									"                    required: [\"checkin\", \"checkout\"],",
+									"                    properties: {",
+									"                        checkin: {",
+									"                            type: \"string\"",
+									"                        },",
+									"                        checkout: {",
+									"                            type: \"string\"",
+									"                        }",
+									"                    }",
+									"                },",
+									"                additionalneeds: {",
+									"                    type: \"string\"",
+									"                }",
+									"            }",
+									"        }",
+									"    }",
+									"};",
+									"",
+									"pm.test(\"CreateBooking response schema is valid\", function () {",
+									"    pm.response.to.have.jsonSchema(createBookingSchema);",
+									"});",
+									"",
+									"",
+									"pm.collectionVariables.set(\"bookingid_schema\", pm.response.json().bookingid);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstname\" : \"Jim\",\n    \"lastname\" : \"Brown\",\n    \"totalprice\" : 111,\n    \"depositpaid\" : true,\n    \"bookingdates\" : {\n        \"checkin\" : \"2018-01-01\",\n        \"checkout\" : \"2019-01-01\"\n    },\n    \"additionalneeds\" : \"Breakfast\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://restful-booker.herokuapp.com/booking",
+							"protocol": "https",
+							"host": [
+								"restful-booker",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"booking"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetBooking Schema",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const GetbookingSchema = {",
+									"    type: \"object\",",
+									"    required: [",
+									"        \"firstname\",",
+									"        \"lastname\",",
+									"        \"totalprice\",",
+									"        \"depositpaid\",",
+									"        \"bookingdates\"",
+									"    ],",
+									"    properties: {",
+									"        firstname: {",
+									"            type: \"string\"",
+									"        },",
+									"        lastname: {",
+									"            type: \"string\"",
+									"        },",
+									"        totalprice: {",
+									"            type: \"number\"",
+									"        },",
+									"        depositpaid: {",
+									"            type: \"boolean\"",
+									"        },",
+									"        bookingdates: {",
+									"            type: \"object\",",
+									"            required: [\"checkin\", \"checkout\"],",
+									"            properties: {",
+									"                checkin: {",
+									"                    type: \"string\"",
+									"                },",
+									"                checkout: {",
+									"                    type: \"string\"",
+									"                }",
+									"            }",
+									"        }",
+									"    }",
+									"};",
+									"",
+									"pm.test(\"GetBooking response schema is valid\", function () {",
+									"    pm.response.to.have.jsonSchema(GetbookingSchema);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{myToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://restful-booker.herokuapp.com/booking/4",
+							"protocol": "https",
+							"host": [
+								"restful-booker",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"booking",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateBooking Schema",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"UpdateBooking returns 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const updateBookingSchema = {",
+									"    type: \"object\",",
+									"    required: [",
+									"        \"firstname\",",
+									"        \"lastname\",",
+									"        \"totalprice\",",
+									"        \"depositpaid\",",
+									"        \"bookingdates\",",
+									"        \"additionalneeds\"",
+									"    ],",
+									"    properties: {",
+									"        firstname: {",
+									"            type: \"string\"",
+									"        },",
+									"        lastname: {",
+									"            type: \"string\"",
+									"        },",
+									"        totalprice: {",
+									"            type: \"number\"",
+									"        },",
+									"        depositpaid: {",
+									"            type: \"boolean\"",
+									"        },",
+									"        bookingdates: {",
+									"            type: \"object\",",
+									"            required: [\"checkin\", \"checkout\"],",
+									"            properties: {",
+									"                checkin: {",
+									"                    type: \"string\"",
+									"                },",
+									"                checkout: {",
+									"                    type: \"string\"",
+									"                }",
+									"            }",
+									"        },",
+									"        additionalneeds: {",
+									"            type: \"string\"",
+									"        }",
+									"    }",
+									"};",
+									"",
+									"pm.test(\"UpdateBooking response schema is valid\", function () {",
+									"    pm.response.to.have.jsonSchema(updateBookingSchema);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Cookie",
+								"value": "token={{myToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstname\" : \"James\",\n    \"lastname\" : \"Brown\",\n    \"totalprice\" : 111,\n    \"depositpaid\" : true,\n    \"bookingdates\" : {\n        \"checkin\" : \"2018-01-01\",\n        \"checkout\" : \"2019-01-01\"\n    },\n    \"additionalneeds\" : \"Breakfast\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://restful-booker.herokuapp.com/booking/2",
+							"protocol": "https",
+							"host": [
+								"restful-booker",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"booking",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"variable": [
@@ -854,6 +1199,10 @@
 		},
 		{
 			"key": "BookingID",
+			"value": ""
+		},
+		{
+			"key": "bookingid_schema",
 			"value": ""
 		}
 	]
