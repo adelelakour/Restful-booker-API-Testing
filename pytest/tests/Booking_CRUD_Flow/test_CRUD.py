@@ -1,5 +1,4 @@
 from wsgiref import headers
-
 import requests
 
 def test_get_bookings(base_url):
@@ -32,7 +31,7 @@ def test_update_booking(test_create_booking, base_url, auth_token):
     }
 
     response = requests.put(
-        f"{base_url}/booking/{test_create_booking}",
+        f"{base_url}/booking/{test_create_booking["bookingid"]}",
         json=payload,
         headers=headers
     )
@@ -55,7 +54,7 @@ def test_partial_update_booking(test_create_booking, base_url, auth_token):
     }
 
     response = requests.patch(
-        f"{base_url}/booking/{test_create_booking}",
+        f"{base_url}/booking/{test_create_booking["bookingid"]}",
         json=payload,
         headers=headers
     )
@@ -73,7 +72,7 @@ def test_delete_booking(test_create_booking, base_url, auth_token):
     }
 
     response = requests.delete(
-        f"{base_url}/booking/{test_create_booking}",
+        f"{base_url}/booking/{test_create_booking["bookingid"]}",
             headers=headers
     )
 

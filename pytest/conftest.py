@@ -5,7 +5,7 @@ import requests
 def base_url():
     return "https://restful-booker.herokuapp.com"
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def auth_token(base_url):
     payload = {
         "username": "admin",
@@ -42,4 +42,4 @@ def test_create_booking(base_url, auth_token):
     assert response.status_code == 200
     print(json_data)
     assert "bookingid" in json_data
-    return json_data["bookingid"]
+    return json_data
