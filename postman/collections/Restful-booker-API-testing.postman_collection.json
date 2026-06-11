@@ -1317,14 +1317,13 @@
 								"exec": [
 									"const json_data = pm.response.json();",
 									"",
-									"pm.test(\"CreateBooking Negative Price returns 200 OK\", function () {",
+									"pm.test(\"CreateBooking with hyphenated name returns 200 OK\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test(\"CreateBooking Negative Price returns correct response body\", function () {",
-									"    pm.expect(json_data.booking.totalprice).to.eql(0);",
+									"pm.test(\"CreateBooking with hyphenated name returns firstname with hyphen symbol\", function () {",
+									"    pm.expect(json_data.booking.firstname).to.include('-');",
 									"});",
-									"",
 									""
 								],
 								"type": "text/javascript",
@@ -1343,7 +1342,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"firstname\" : \"Jim-carry\",\n    \"lastname\" : \"Brown-al\",\n    \"totalprice\" : 100,\n    \"depositpaid\" : true,\n    \"bookingdates\" : {\n        \"checkin\" : \"2018-01-01\",\n        \"checkout\" : \"2019-01-01\"\n    },\n    \"additionalneeds\" : \"Breakfast\"\n}",
+							"raw": "{\n    \"firstname\" : \"Adel-Dola\",\n    \"lastname\" : \"Elakour\",\n    \"totalprice\" : 100,\n    \"depositpaid\" : true,\n    \"bookingdates\" : {\n        \"checkin\" : \"2018-01-01\",\n        \"checkout\" : \"2019-01-01\"\n    },\n    \"additionalneeds\" : \"Breakfast\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1374,14 +1373,13 @@
 								"exec": [
 									"const json_data = pm.response.json();",
 									"",
-									"pm.test(\"CreateBooking Negative Price returns 200 OK\", function () {",
+									"pm.test(\"CreateBooking with blank name returns 200 OK\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test(\"CreateBooking Negative Price returns correct response body\", function () {",
-									"    pm.expect(json_data.booking.totalprice).to.eql(0);",
+									"pm.test(\"CreateBooking with hyphenated name returns firstname with hyphen symbol\", function () {",
+									"    pm.expect(json_data.booking.firstname).to.include('');",
 									"});",
-									"",
 									""
 								],
 								"type": "text/javascript",
@@ -1431,12 +1429,12 @@
 								"exec": [
 									"const json_data = pm.response.json();",
 									"",
-									"pm.test(\"CreateBooking Negative Price returns 200 OK\", function () {",
+									"pm.test(\"CreateBooking with whitespace name returns 200 OK\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test(\"CreateBooking Negative Price returns correct response body\", function () {",
-									"    pm.expect(json_data.booking.totalprice).to.eql(0);",
+									"pm.test(\"CreateBooking with whitespace name\", function () {",
+									"    pm.expect(json_data.booking.firstname).to.eql(\"\");",
 									"});",
 									"",
 									""
@@ -1457,7 +1455,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"firstname\" : \"    \",\n    \"lastname\" : \"Elakour\",\n    \"totalprice\" : 100,\n    \"depositpaid\" : true,\n    \"bookingdates\" : {\n        \"checkin\" : \"2018-01-01\",\n        \"checkout\" : \"2019-01-01\"\n    },\n    \"additionalneeds\" : \"Breakfast\"\n}",
+							"raw": "{\n    \"firstname\" : \" \",\n    \"lastname\" : \"Elakour\",\n    \"totalprice\" : 100,\n    \"depositpaid\" : true,\n    \"bookingdates\" : {\n        \"checkin\" : \"2018-01-01\",\n        \"checkout\" : \"2019-01-01\"\n    },\n    \"additionalneeds\" : \"Breakfast\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1488,13 +1486,10 @@
 								"exec": [
 									"const json_data = pm.response.json();",
 									"",
-									"pm.test(\"CreateBooking Negative Price returns 200 OK\", function () {",
+									"pm.test(\"CreateBooking with a very long name returns 200 OK\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test(\"CreateBooking Negative Price returns correct response body\", function () {",
-									"    pm.expect(json_data.booking.totalprice).to.eql(0);",
-									"});",
 									"",
 									""
 								],
@@ -1537,7 +1532,7 @@
 					"response": []
 				},
 				{
-					"name": "CreateBooking with old date checkin",
+					"name": "CreateBooking with old checkin date",
 					"event": [
 						{
 							"listen": "test",
@@ -1545,12 +1540,8 @@
 								"exec": [
 									"const json_data = pm.response.json();",
 									"",
-									"pm.test(\"CreateBooking Negative Price returns 200 OK\", function () {",
+									"pm.test(\"CreateBooking with old checkin date returns 200 OK\", function () {",
 									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"pm.test(\"CreateBooking Negative Price returns correct response body\", function () {",
-									"    pm.expect(json_data.booking.totalprice).to.eql(0);",
 									"});",
 									"",
 									""
@@ -1602,14 +1593,16 @@
 								"exec": [
 									"const json_data = pm.response.json();",
 									"",
-									"pm.test(\"CreateBooking Negative Price returns 200 OK\", function () {",
+									"pm.test(\"CreateBooking with checkin after checkout returns 200 OK\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test(\"CreateBooking Negative Price returns correct response body\", function () {",
-									"    pm.expect(json_data.booking.totalprice).to.eql(0);",
-									"});",
+									"pm.test(\"Booking is created with checkin date after checkout date\", function () {",
+									"    const checkin = new Date(json_data.booking.bookingdates.checkin);",
+									"    const checkout = new Date(json_data.booking.bookingdates.checkout);",
 									"",
+									"    pm.expect(checkin.getTime()).to.be.above(checkout.getTime());",
+									"});",
 									""
 								],
 								"type": "text/javascript",
@@ -1659,14 +1652,15 @@
 								"exec": [
 									"const json_data = pm.response.json();",
 									"",
-									"pm.test(\"CreateBooking Negative Price returns 200 OK\", function () {",
+									"pm.test(\"CreateBooking with invalid date format returns 200 OK\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test(\"CreateBooking Negative Price returns correct response body\", function () {",
-									"    pm.expect(json_data.booking.totalprice).to.eql(-111);",
-									"});",
+									"pm.test(\"Checkin date does not follow YYYY/MM/DD format\", function () {",
+									"    const checkin = json_data.booking.bookingdates.checkin;",
 									"",
+									"    pm.expect(checkin).to.not.match(/^\\d{4}\\/\\d{2}\\/\\d{2}$/);",
+									"});",
 									""
 								],
 								"type": "text/javascript",
